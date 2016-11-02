@@ -1,6 +1,6 @@
 {
   "name": "bttree/sm-yii2-widgets",
-  "description": "SM rbac",
+  "description": "SM widgets",
   "keywords": [
     "yii2",
     "yii2-widgets"
@@ -24,11 +24,6 @@
   "autoload": {
     "psr-4": {
       "bttree\\smywidgets\\": ""
-    }
-  },
-  "extra": {
-    "branch-alias": {
-      "dev-master": "v1.0.1"
     }
   }
 }
