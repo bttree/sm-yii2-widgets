@@ -1,5 +1,5 @@
 <?php
-namespace bttree\smywidgets\widgets;
+namespace backend\widgets;
 
 use Yii;
 use yii\base\Widget;
@@ -12,9 +12,9 @@ use yii\base\Widget;
 class TextEditorWidget extends Widget
 {
     /**
-     * @var string $class vova07\imperavi\Widget or dosamigos\ckeditor\CKEditor
+     * @var string $class \vova07\imperavi\Widget or \dosamigos\ckeditor\CKEditor
      */
-    public $class;
+    public $widgetClass;
 
     /**
      * @var \yii\base\Model the data model that this widget is associated with.
@@ -58,8 +58,7 @@ class TextEditorWidget extends Widget
 
     public function run()
     {
-
-        $widget = $this->class;
+        $widget = $this->widgetClass;
 
         return $widget::widget([
                                    'model'     => $this->model,
