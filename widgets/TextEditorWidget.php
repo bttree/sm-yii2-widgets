@@ -1,5 +1,5 @@
 <?php
-namespace backend\widgets;
+namespace bttree\smywidgets\widgets;
 
 use Yii;
 use yii\base\Widget;
