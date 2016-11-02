@@ -1,0 +1,34 @@
+{
+  "name": "bttree/sm-yii2-widgets",
+  "description": "SM rbac",
+  "keywords": [
+    "yii2",
+    "yii2-widgets"
+  ],
+  "minimum-stability": "stable",
+  "homepage": "https://bitbucket.org/bttree/sm-yii2-widgets",
+  "type": "yii2-extension",
+  "license": "BSD-3",
+  "authors": [
+    {
+      "name": "Anton Sitnikov",
+      "email": "x525vx@gmail.com",
+      "homepage": "http://sitemaket.ru"
+    }
+  ],
+  "require": {
+    "yiisoft/yii2": "~2.0.7",
+    "vova07/yii2-imperavi-widget": "*",
+    "2amigos/yii2-ckeditor-widget": "2.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "bttree\\smywidgets\\": ""
+    }
+  },
+  "extra": {
+    "branch-alias": {
+      "dev-master": "v1.0.1"
+    }
+  }
+}
