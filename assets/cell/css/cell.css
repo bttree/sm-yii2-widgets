@@ -1,0 +1,4 @@
+.chosen-container .chosen-drop,
+.chosen-search input {
+    box-sizing: border-box;
+}
