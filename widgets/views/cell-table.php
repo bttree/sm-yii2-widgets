@@ -1,0 +1,123 @@
+<?php
+
+use bttree\smywidgets\assets\CellAsset;
+use yii\helpers\Json;
+
+/* @var array $options */
+/* @var string $table_id */
+/* @var string $table_pagination_id */
+/* @var string $ajax_url */
+/* @var integer $page_size */
+
+\common\assets\CommonAsset::register($this);
+CellAsset::register($this);
+?>
+<div id="<?= $table_pagination_id ?>"></div>
+<div id="<?= $table_id ?>" style="max-width: 100%"></div>
+
+<?php
+$this->registerJs(
+/** @lang javascript */
+    '
+     $( document ).ready(function() {
+
+        var tableContainer = document.getElementById("' . $table_id . '");
+        var table = new Handsontable(tableContainer, ' . Json::encode($options) . ');
+        getDataNative(table);
+        Handsontable.Dom.addEvent(window, \'hashchange\', function (event) {
+            getDataNative(table) 
+        });
+        
+        $(document).on("click", ".cell-pagination_item", function (event) {
+            event.preventDefault();
+            window.history.pushState(null, null, "?page="+ $(this).data("page"));
+            getDataNative(table);
+        });
+    });
+    
+    function renderPagination(paginationBlock, totalCount) {
+        var pagingControls = "";
+        var numPages       = Math.ceil(totalCount / ' . $page_size . ');
+        var currentPage    = parseInt(getUrlParamByName("page"));
+        
+        if(!$.isNumeric(currentPage)) {
+            currentPage = 1;
+        }
+        
+        if(numPages > 1) {
+            pagingControls += \'<ul class="pagination">\'
+            if(currentPage != 1) {
+                var prevPage = currentPage - 1;
+                pagingControls += \'<li class="prev cell-pagination_item" data-page="\'+ prevPage +\'"><a href="/prices?page=\'+ prevPage +\'" >«</a></li>\';
+            } else {
+                pagingControls += \'<li class="prev disabled"><span>«</span></li>\';
+            }
+        }
+        for (var i = 1; i <= numPages; i++) {
+            if (i != currentPage) {
+                pagingControls += "<li class=\'cell-pagination_item\' data-page=\'"+ i +"\'><a href=\'?page="+ i +"\' >"+ i +"</a></li>";
+            } else {
+                pagingControls += "<li class=\'cell-pagination_item active\' data-page=\'"+ i +"\'><a href=\'?page="+ i +"\' >"+ i +"</a></li>";
+            }
+        }
+        if(numPages > 1) {
+            if(currentPage != numPages) {
+                var nextPage = currentPage + 1;
+                pagingControls += \'<li class="next cell-pagination_item" data-page="\'+ nextPage +\'"><a href="/prices?page=\'+ nextPage +\'">»</a></li>\';
+            } else {
+                pagingControls += \'<li class="next disabled"><span>»</span></li>\';
+            }
+            pagingControls += \'</ul>\'
+        }
+        
+        paginationBlock.html(pagingControls);
+    }
+    
+    function getUrlParamByName(name) {
+        var results = new RegExp(\'[\?&]\' + name + \'=([^&#]*)\').exec(window.location.href);
+        if (results == null){
+           return null;
+        } else {
+           return results[1] || 0;
+        }
+    }
+    
+    function getDataNative(table) {
+        var page    = getUrlParamByName("page") || 1;
+        $.ajax({
+            url: "' . $ajax_url . '",
+            type: "GET",
+            asynch: false,
+            data: {
+                pageSize : "' . $page_size . '",
+                page     : page
+            },
+            success: function(result) {
+                table.loadData(result.data);
+                
+                var paginationBlock = $("#' . $table_pagination_id . '");
+                renderPagination(paginationBlock, result.totalCount);
+            }
+        });
+    }
+  
+    function customDropdownRenderer(instance, td, row, col, prop, value, cellProperties) {
+        var selectedId;
+        var optionsList = cellProperties.chosenOptions.data;
+    
+        var values = (value + "").split(",");
+        var value = [];
+        for (var index = 0; index < optionsList.length; index++) {
+            if (values.indexOf(optionsList[index].id + "") > -1) {
+                selectedId = optionsList[index].id;
+                value.push(optionsList[index].label);
+            }
+        }
+        value = value.join(", ");
+    
+        Handsontable.TextCell.renderer.apply(this, arguments);
+    }
+   
+    '
+);
+?>
