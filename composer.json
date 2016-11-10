@@ -17,9 +17,7 @@
     }
   ],
   "require": {
-    "yiisoft/yii2": "~2.0.7",
-    "vova07/yii2-imperavi-widget": "*",
-    "2amigos/yii2-ckeditor-widget": "2.0"
+    "yiisoft/yii2": "~2.0.7"
   },
   "autoload": {
     "psr-4": {
