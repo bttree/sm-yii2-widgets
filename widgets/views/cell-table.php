@@ -30,7 +30,15 @@ $this->registerJs(
         
         $(document).on("click", ".cell-pagination_item", function (event) {
             event.preventDefault();
-            window.history.pushState(null, null, "?page="+ $(this).data("page"));
+            var pageNum = $(this).data("page");
+            var url     = window.location.href;
+            var regEx   = /([?&]page)=([^#&]*)/g;
+            var newUrl  = url.replace(regEx, "$1="+ pageNum);
+            if(url == newUrl) {
+                newUrl = url + "?page="+ pageNum;
+            }
+            
+            window.history.pushState(null, null, newUrl);
             getDataNative(table);
         });
     });
@@ -82,16 +90,27 @@ $this->registerJs(
         }
     }
     
+    function getUrlParams()
+    {
+        var params = {};
+        var hash;
+        var hashes = window.location.href.slice(window.location.href.indexOf(\'?\') + 1).split(\'&\');
+        for(var i = 0; i < hashes.length; i++)
+        {
+            hash = hashes[i].split(\'=\');
+            params[hash[0]] = hash[1];
+        }
+        return params;
+    }
+    
     function getDataNative(table) {
-        var page    = getUrlParamByName("page") || 1;
+        var params = getUrlParams();
+        params["pageSize"] = "' . $page_size . '";
         $.ajax({
             url: "' . $ajax_url . '",
             type: "GET",
             asynch: false,
-            data: {
-                pageSize : "' . $page_size . '",
-                page     : page
-            },
+            data: params,
             success: function(result) {
                 table.loadData(result.data);
                 
