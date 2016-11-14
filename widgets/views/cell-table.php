@@ -36,6 +36,9 @@ $this->registerJs(
             window.history.pushState(null, null, newUrl);
             getDataNative(table);
         });
+        $.bind("refreshTable", function(){
+            getDataNative(table);
+        });
     });
     
     function renderPagination(paginationBlock, totalCount) {
