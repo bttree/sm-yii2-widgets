@@ -58,7 +58,7 @@ $this->registerJs(
             } else {
                 pagingControls += \'<li class="prev disabled"><span>«</span></li>\';
             }
-        }
+        
         for (var i = 1; i <= numPages; i++) {
             if (i != currentPage) {
                 pagingControls += "<li class=\'cell-pagination_item\' data-page=\'"+ i +"\'><a href=\'?page="+ i +"\' >"+ i +"</a></li>";
@@ -66,7 +66,7 @@ $this->registerJs(
                 pagingControls += "<li class=\'cell-pagination_item active\' data-page=\'"+ i +"\'><a href=\'?page="+ i +"\' >"+ i +"</a></li>";
             }
         }
-        if(numPages > 1) {
+        
             if(currentPage != numPages) {
                 var nextPage = currentPage + 1;
                 pagingControls += \'<li class="next cell-pagination_item" data-page="\'+ nextPage +\'"><a href="/prices?page=\'+ nextPage +\'">»</a></li>\';
