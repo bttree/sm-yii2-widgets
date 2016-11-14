@@ -36,7 +36,7 @@ $this->registerJs(
             window.history.pushState(null, null, newUrl);
             getDataNative(table);
         });
-        $.bind("refreshTable", function(){
+        $("body").bind("refreshTable", function(){
             getDataNative(table);
         });
     });
