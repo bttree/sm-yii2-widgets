@@ -1,6 +1,7 @@
 <?php
 
 use bttree\smywidgets\assets\CellAsset;
+use bttree\smywidgets\assets\QueryObjectAsset;
 use yii\helpers\Json;
 
 /* @var array $options */
@@ -9,7 +10,7 @@ use yii\helpers\Json;
 /* @var string $ajax_url */
 /* @var integer $page_size */
 
-\common\assets\CommonAsset::register($this);
+QueryObjectAsset::register($this);
 CellAsset::register($this);
 ?>
 <div id="<?= $table_id ?>" style="max-width: 100%"></div>
@@ -30,12 +31,7 @@ $this->registerJs(
         $(document).on("click", ".cell-pagination_item", function (event) {
             event.preventDefault();
             var pageNum = $(this).data("page");
-            var url     = window.location.href;
-            var regEx   = /([?&]page)=([^#&]*)/g;
-            var newUrl  = url.replace(regEx, "$1="+ pageNum);
-            if(url == newUrl) {
-                newUrl = url + "?page="+ pageNum;
-            }
+            var newUrl  = $.query.SET("page", pageNum);
             
             window.history.pushState(null, null, newUrl);
             getDataNative(table);
