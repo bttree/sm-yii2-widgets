@@ -12,9 +12,8 @@ use yii\helpers\Json;
 \common\assets\CommonAsset::register($this);
 CellAsset::register($this);
 ?>
-<div id="<?= $table_pagination_id ?>"></div>
 <div id="<?= $table_id ?>" style="max-width: 100%"></div>
-
+<div id="<?= $table_pagination_id ?>"></div>
 <?php
 $this->registerJs(
 /** @lang javascript */
