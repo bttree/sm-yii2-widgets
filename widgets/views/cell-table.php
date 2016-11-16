@@ -58,7 +58,23 @@ $this->registerJs(
         return {
             getRenderFunction: function(){
                 return function(instance, td, row, col, prop, value, cellProperties) {
+                    if(cellProperties.editor === "chosen") {
+                        var selectedId;
+                        var optionsList = cellProperties.chosenOptions.data;
+                    
+                        var values = (value + "").split(",");
+                        var value = [];
+                        for (var index = 0; index < optionsList.length; index++) {
+                            if (values.indexOf(optionsList[index].id + "") > -1) {
+                                selectedId = optionsList[index].id;
+                                value.push(optionsList[index].label);
+                            }
+                        }
+                        value = value.join(", ");
+                    }
+                    
                     Handsontable.TextRenderer.apply(this, arguments);
+                    
                     if($.inArray( row, highlightedRows ) !== -1){
                         td.style.backgroundColor = highlightedColor;
                     }
@@ -161,24 +177,6 @@ $this->registerJs(
             }
         );
     }
-  
-    function customDropdownRenderer(instance, td, row, col, prop, value, cellProperties) {
-        var selectedId;
-        var optionsList = cellProperties.chosenOptions.data;
-    
-        var values = (value + "").split(",");
-        var value = [];
-        for (var index = 0; index < optionsList.length; index++) {
-            if (values.indexOf(optionsList[index].id + "") > -1) {
-                selectedId = optionsList[index].id;
-                value.push(optionsList[index].label);
-            }
-        }
-        value = value.join(", ");
-    
-        Handsontable.TextCell.renderer.apply(this, arguments);
-    }
-   
     '
 );
 ?>
