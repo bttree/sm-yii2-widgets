@@ -29,6 +29,10 @@ $this->registerJs(
             rowRenderer.setHighlightedRow(rowId);
             table.render();
         };
+        table.unsetRowError = function(rowId) {
+            rowRenderer.unsetHighlightedRow(rowId);
+            table.render();
+        };
         getDataNative(table);
         Handsontable.Dom.addEvent(window, \'hashchange\', function (event) {
             getDataNative(table) 
