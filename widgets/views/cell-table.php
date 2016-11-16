@@ -20,9 +20,15 @@ $this->registerJs(
 /** @lang javascript */
     '
      $( document ).ready(function() {
-
+        var rowRenderer   = new RowRenderer();
+        
         var tableContainer = document.getElementById("' . $table_id . '");
         var table = new Handsontable(tableContainer, ' . Json::encode($options) . ');
+        
+        table.setRowError = function(rowId) {
+            rowRenderer.setHighlightedRow(rowId);
+            table.render();
+        };
         getDataNative(table);
         Handsontable.Dom.addEvent(window, \'hashchange\', function (event) {
             getDataNative(table) 
@@ -40,6 +46,34 @@ $this->registerJs(
             getDataNative(table);
         });
     });
+    
+    function RowRenderer() {
+        var highlightedRows   = [];
+        var highlightedColor = "#FF7C7C";
+        
+        return {
+            getRenderFunction: function(){
+                return function(instance, td, row, col, prop, value, cellProperties) {
+                    Handsontable.TextRenderer.apply(this, arguments);
+                    if($.inArray( row, highlightedRows ) !== -1){
+                        td.style.backgroundColor = highlightedColor;
+                    }
+                    return td;
+                }
+            },
+            setHighlightedRow: function(row){
+                highlightedRows.push(row);
+            },
+            unsetHighlightedRow: function(row){
+                highlightedRows = jQuery.grep(highlightedRows, function(value) {
+                  return value != row;
+                });
+            },
+            resetHighlightedRow: function(){
+                highlightedRows = [];
+            }
+        }
+    }
     
     function renderPagination(paginationBlock, totalCount) {
         var pagingControls = "";

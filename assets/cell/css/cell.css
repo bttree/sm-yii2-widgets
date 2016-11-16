@@ -21,3 +21,8 @@
     z-index: 105;
     background: rgba(211, 211, 211, 0.3) url("../images/load.gif") no-repeat center;
 }
+
+tr.red-error th,
+tr.red-error td {
+    background-color: #FF7C7C;
+}
