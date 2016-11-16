@@ -104,6 +104,9 @@ $this->registerJs(
     function getDataNative(table) {
         var params = getUrlParams();
         params["pageSize"] = "' . $page_size . '";
+        
+        var tableContainer = $(table.container).parent();
+        tableContainer.addClass("loading-table-data");
         $.ajax({
             url: "' . $ajax_url . '",
             type: "GET",
@@ -115,7 +118,10 @@ $this->registerJs(
                 var paginationBlock = $("#' . $table_pagination_id . '");
                 renderPagination(paginationBlock, result.totalCount);
             }
-        });
+        }).always(function() {
+                tableContainer.removeClass("loading-table-data");
+            }
+        );
     }
   
     function customDropdownRenderer(instance, td, row, col, prop, value, cellProperties) {
