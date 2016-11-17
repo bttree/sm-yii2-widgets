@@ -62,7 +62,11 @@ $this->registerJs(
                     if($.inArray( row, highlightedRows ) !== -1){
                         td.style.backgroundColor = highlightedColor;
                     }
-                    var rendeferer = Handsontable.renderers.getRenderer(cellProperties.type);
+                    if(cellProperties.rendererNative){
+                        var rendeferer = cellProperties.rendererNative;
+                    }else{
+                        var rendeferer = Handsontable.renderers.getRenderer(cellProperties.type);
+                    }
                     
                     return rendeferer(instance, td, row, col, prop, value, cellProperties);
                 }
