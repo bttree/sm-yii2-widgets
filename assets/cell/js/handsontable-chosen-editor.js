@@ -37,7 +37,7 @@
         this.textareaParentStyle.top = 0;
         this.textareaParentStyle.left = 0;
         this.textareaParentStyle.display = 'none';
-        this.textareaParentStyle.width = "200px";
+ //       this.textareaParentStyle.width = "200px";
 
         this.TEXTAREA_PARENT.appendChild(this.TEXTAREA);
 
@@ -138,6 +138,7 @@
     ChosenEditor.prototype.open = function (keyboardEvent) {
         this.refreshDimensions();
         this.textareaParentStyle.display = 'block';
+        this.textareaParentStyle.width = ($(this.TD).width()+6)+"px";
         this.instance.addHook('beforeKeyDown', onBeforeKeyDown);
 
         this.$textarea.css({
