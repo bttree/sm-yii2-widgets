@@ -37,6 +37,14 @@ $this->registerJs(
         Handsontable.Dom.addEvent(window, \'hashchange\', function (event) {
             getDataNative(table) 
         });
+        Handsontable.Dom.addEvent(document.getElementById("btn-add-row"), \'click\', function (event) {
+                i = table.countSourceRows() +1;
+                table.alter("insert_row", i);
+        });
+        Handsontable.Dom.addEvent(document.getElementById("btn-remove-row"), \'click\', function (event) {
+                var select = table.getSelected();
+                table.alter(\'remove_row\', select[0], select[2]);                
+        });
         
         $(document).on("click", ".cell-pagination_item", function (event) {
             event.preventDefault();
