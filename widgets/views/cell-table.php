@@ -21,7 +21,11 @@ $this->registerJs(
     '
      $( document ).ready(function() {
         var rowRenderer   = new RowRenderer();
-        
+        var opt = {
+        page_size: "'.$page_size.'",
+        ajax_url: "'.$ajax_url.'",
+        table_pagination_id: "'.$table_pagination_id.'",       
+        };
         var tableContainer = document.getElementById("' . $table_id . '");
         var table = new Handsontable(tableContainer, ' . Json::encode($options) . ');
         
@@ -33,29 +37,35 @@ $this->registerJs(
             rowRenderer.unsetHighlightedRow(rowId);
             table.render();
         };
-        getDataNative(table);
+        getDataNative(table,opt);
         Handsontable.Dom.addEvent(window, \'hashchange\', function (event) {
-            getDataNative(table) 
+            getDataNative(table,opt) 
         });
-        Handsontable.Dom.addEvent(document.getElementById("btn-add-row"), \'click\', function (event) {
+        var btnaddrow = document.getElementById("btn-add-row");
+        if(btnaddrow !== null){
+        Handsontable.Dom.addEvent(btnaddrow, \'click\', function (event) {
                 i = table.countSourceRows() +1;
                 table.alter("insert_row", i);
         });
-        Handsontable.Dom.addEvent(document.getElementById("btn-remove-row"), \'click\', function (event) {
+        }
+        var btnremoverow = document.getElementById("btn-remove-row");
+        if(btnremoverow !== null){
+        Handsontable.Dom.addEvent(btnremoverow, \'click\', function (event) {
                 var select = table.getSelected();
                 table.alter(\'remove_row\', select[0], select[2]);                
         });
-        
+        }
         $(document).on("click", ".cell-pagination_item", function (event) {
             event.preventDefault();
             var pageNum = $(this).data("page");
             var newUrl  = $.query.SET("page", pageNum);
             
             window.history.pushState(null, null, newUrl);
-            getDataNative(table);
+            getDataNative(table,opt);
         });
-        $("body").bind("refreshTable", function(){
-            getDataNative(table);
+        $("#' . $table_id . '").bind("refreshTable", function(){
+        
+            getDataNative(table,opt);
         });
     });
     
@@ -169,21 +179,21 @@ $this->registerJs(
         Handsontable.TextCell.renderer.apply(this, arguments);
     }
    
-    function getDataNative(table) {
+    function getDataNative(table,opt) {
         var params = getUrlParams();
-        params["pageSize"] = "' . $page_size . '";
+        params["pageSize"] = opt.page_size;
         
         var tableContainer = $(table.container).parent();
         tableContainer.addClass("loading-table-data");
         $.ajax({
-            url: "' . $ajax_url . '",
+            url: opt.ajax_url,
             type: "GET",
             asynch: false,
             data: params,
             success: function(result) {
                 table.loadData(result.data);
                 
-                var paginationBlock = $("#' . $table_pagination_id . '");
+                var paginationBlock = $("#"+opt.table_pagination_id);
                 renderPagination(paginationBlock, result.totalCount);
             }
         }).always(function() {
