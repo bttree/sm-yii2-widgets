@@ -54,7 +54,7 @@ $this->registerJs(
                 var select = table.getSelected();
                 table.alter(\'remove_row\', select[0], select[2]);                
         });
-        }
+        }        
         $(document).on("click", ".cell-pagination_item", function (event) {
             event.preventDefault();
             var pageNum = $(this).data("page");
