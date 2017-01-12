@@ -213,11 +213,13 @@ $this->registerJs(
             success: function(result) {
                 var data = new Array();
                 $.each(result.data, function( index, value ) {
+                var arr = new Array();
+                arr[opt.groupCol] = value[opt.groupCol];
                 if(index == 0){
-                data.push(value);
+                data.push(arr);
                 }else{
                 if(result.data[index-1][opt.groupCol] !== value[opt.groupCol]){
-                data.push(value);
+                data.push(arr);
                 }               
                 }
                 data.push(value);
