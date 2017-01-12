@@ -16,12 +16,20 @@ CellAsset::register($this);
 <div id="<?= $table_id ?>" style="max-width: 100%"></div>
 <div id="<?= $table_pagination_id ?>"></div>
 <?php
+$group = "";
+foreach($options['columns'] as $col){
+    if(isset($col['group'])){
+        $group = $col['data'];
+    }
+}
+
 $this->registerJs(
 /** @lang javascript */
     '
      $( document ).ready(function() {
         var rowRenderer   = new RowRenderer();
         var opt = {
+        groupCol: "'.$group.'",
         page_size: "'.$page_size.'",
         ajax_url: "'.$ajax_url.'",
         table_pagination_id: "'.$table_pagination_id.'",       
@@ -37,6 +45,11 @@ $this->registerJs(
             rowRenderer.unsetHighlightedRow(rowId);
             table.render();
         };
+        table.setGroupRow = function(rowId) {
+            rowRenderer.setGroupRow(table,rowId);
+            table.render();
+        };
+        
         getDataNative(table,opt);
         Handsontable.Dom.addEvent(window, \'hashchange\', function (event) {
             getDataNative(table,opt) 
@@ -63,8 +76,7 @@ $this->registerJs(
             window.history.pushState(null, null, newUrl);
             getDataNative(table,opt);
         });
-        $("#' . $table_id . '").bind("refreshTable", function(){
-        
+        $("#' . $table_id . '").bind("refreshTable", function(){ 
             getDataNative(table,opt);
         });
     });
@@ -76,7 +88,15 @@ $this->registerJs(
         return {
             getRenderFunction: function(){
                 return function(instance, td, row, col, prop, value, cellProperties) {
-                                        
+                    if(cellProperties.group > 0){
+                    if (value != instance.getDataAtCell(row - 1, col)){
+                          td.setAttribute("style", "vertical-align: middle");
+                          td.setAttribute("align", "center");
+                          td.setAttribute("colSpan", cellProperties.group);
+                          } else {
+                            return ;
+                          }
+                    }                   
                     if($.inArray( row, highlightedRows ) !== -1){
                         td.style.backgroundColor = highlightedColor;
                     }
@@ -191,7 +211,19 @@ $this->registerJs(
             asynch: false,
             data: params,
             success: function(result) {
-                table.loadData(result.data);
+                var data = new Array();
+                $.each(result.data, function( index, value ) {
+                if(index == 0){
+                data.push(value);
+                }else{
+                if(result.data[index-1][opt.groupCol] !== value[opt.groupCol]){
+                data.push(value);
+                }               
+                }
+                data.push(value);
+                 });  
+            
+                table.loadData(data);
                 
                 var paginationBlock = $("#"+opt.table_pagination_id);
                 renderPagination(paginationBlock, result.totalCount);
