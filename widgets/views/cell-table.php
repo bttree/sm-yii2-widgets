@@ -94,7 +94,9 @@ $this->registerJs(
                           td.setAttribute("align", "center");
                           td.setAttribute("colSpan", cellProperties.group);
                           } else {
-                            td.setAttribute("colSpan", 1);
+                            td.remoteAttribute("colSpan");
+                           value = ""; 
+                           
                           }
                     }                   
                     if($.inArray( row, highlightedRows ) !== -1){
@@ -213,15 +215,17 @@ $this->registerJs(
             success: function(result) {
                 var data = new Array();
                 $.each(result.data, function( index, value ) {
-                var arr = new Array();
-                arr[opt.groupCol] = value[opt.groupCol];
-                if(index == 0){
-                data.push(arr);
-                }else{
-                if(result.data[index-1][opt.groupCol] !== value[opt.groupCol]){
-                data.push(arr);
-                }               
-                }
+                if(opt.groupCol.length > 0){
+                    var arr = new Array();
+                    arr[opt.groupCol] = value[opt.groupCol];
+                    if(index == 0){
+                    data.push(arr);
+                    }else{
+                    if(result.data[index-1][opt.groupCol] !== value[opt.groupCol]){
+                    data.push(arr);
+                    }               
+                    }
+                 }   
                 data.push(value);
                  });  
             
