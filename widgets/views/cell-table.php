@@ -94,7 +94,7 @@ $this->registerJs(
                           td.setAttribute("align", "center");
                           td.setAttribute("colSpan", cellProperties.group);
                           } else {
-                            td.remoteAttribute("colSpan");
+                            td.removeAttribute("colSpan");
                            value = ""; 
                            
                           }
