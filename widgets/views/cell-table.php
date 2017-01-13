@@ -94,7 +94,7 @@ $this->registerJs(
                           td.setAttribute("align", "center");
                           td.setAttribute("colSpan", cellProperties.group);
                           } else {
-                            return ;
+                            td.setAttribute("colSpan", 1);
                           }
                     }                   
                     if($.inArray( row, highlightedRows ) !== -1){
