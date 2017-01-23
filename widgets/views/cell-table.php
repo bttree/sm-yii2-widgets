@@ -17,9 +17,15 @@ CellAsset::register($this);
 <div id="<?= $table_pagination_id ?>"></div>
 <?php
 $group = "";
+$summ = false;
 foreach($options['columns'] as $col){
     if(isset($col['group'])){
         $group = $col['data'];
+    }
+    if(isset($col['rendererNative'])){
+        if($col['rendererNative'] == 'TotalNameRender'){
+            $summ = true;
+        }
     }
 }
 
@@ -28,7 +34,9 @@ $this->registerJs(
     '
      $( document ).ready(function() {
         var rowRenderer   = new RowRenderer();
+        var summ = {};
         var opt = {
+        summ: "'.$summ.'",
         groupCol: "'.$group.'",
         page_size: "'.$page_size.'",
         ajax_url: "'.$ajax_url.'",
@@ -97,6 +105,9 @@ $this->registerJs(
                             td.removeAttribute("colSpan");
                            value = ""; 
                            
+                          }
+                          if(row == instance.countRows() - 1){
+                            td.removeAttribute("colSpan");
                           }
                     }                   
                     if($.inArray( row, highlightedRows ) !== -1){
@@ -200,7 +211,26 @@ $this->registerJs(
     
         Handsontable.TextCell.renderer.apply(this, arguments);
     }
-   
+   function TotalNameRender(instance, td, row, col, prop, value){
+        if(row == instance.countRows() - 1){
+            td.style.fontWeight = \'bold\';
+            td.style.textAlign = \'right\';
+            td.innerText = \'Итого: \';
+            return;
+        } else {
+             Handsontable.TextCell.renderer.apply(this, arguments);
+        }   
+    }
+    function TotalRender(instance, td, row, col, prop, value){
+        if(row == instance.countRows() - 1){
+            td.innerText = instance.getDataAtCol(col).reduce(function(sum, row){
+                        return sum + row; 
+                }, 0);
+        } else {
+           Handsontable.TextCell.renderer.apply(this, arguments);
+        }   
+    }
+    
     function getDataNative(table,opt) {
         var params = getUrlParams();
         params["pageSize"] = opt.page_size;
@@ -228,7 +258,10 @@ $this->registerJs(
                  }   
                 data.push(value);
                  });  
-            
+                
+                if(opt.summ){
+                    data.push({});
+                }
                 table.loadData(data);
                 
                 var paginationBlock = $("#"+opt.table_pagination_id);
