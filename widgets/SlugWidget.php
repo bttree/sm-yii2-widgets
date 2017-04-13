@@ -95,7 +95,11 @@ class SlugWidget extends Widget
                 $this->url
                 . '");';
         $view = $this->getView();
-        $view->registerJs($js, $view::POS_END);
+
+        /*
+         * Инициализируем слаг по готовности скриптов. Если он отрабатывает раньше - к нему не цепляется csrf
+         */
+        $view->registerJs($js, $view::POS_READY);
 
         if ($this->renderInput) {
             if ($this->hasModel()) {
