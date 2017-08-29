@@ -1,6 +1,6 @@
 <?php
 
-namespace common\behaviors;
+namespace bttree\smywidgets\behaviors;
 
 use yii\behaviors\AttributeBehavior;
 
