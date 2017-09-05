@@ -62,7 +62,7 @@ class ConstArrayBehavior extends AttributeBehavior
         $array = $this->getConstArray($attribute);
         $value = $this->owner->$attribute;
         if (isset($array[$value])) {
-            return $this->arrays[$value];
+            return $array[$value];
         } else {
             return '---';
         }
